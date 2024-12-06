@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load tailwind_filters %}
+{% load static %}
+{% block title %}Beursborrel{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center">
+    <div class="flex-row">
+        <div class="flex justify-center items-center">
+            <p> We zijn begonnen!</p>
+        </div>
+ 
+    </div>
+</div>
+{% autoescape off %}
+    {{ plot_div }}
+{% endautoescape %}
+{% endblock %}

@@ -1,0 +1,18 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}ForecastInGame{% endblock %}</title>
+  {% tailwind_css %}
+  <script src="https://unpkg.com/htmx.org@1.9.11"></script>
+  <script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
+</head>
+<body class="h-screen bg-gray-light">
+
+    {% block content %}
+    {% endblock %}
+    
+  </nav>
+</body>
+</html>

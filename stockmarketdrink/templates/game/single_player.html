@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="flex justify-center items-center">
+    <div class="flex-row">
+        {% if any_active %}
+        <h2 class="text-neutral-800 text-base justify-center items-center mb-5">You already have an active game, please finish this game to start a new one</h2>
+        {% else %}
+        <h2 class="text-neutral-800 text-base justify-center items-center mb-5">Create a new game or look at an old game</h2>
+        <div class="flex justify-center items-center">
+            <button class="btn justify-center items-center" onclick="location.href= '/game/create/singleplayer'">Create game</button>
+        </div>
+        {%endif%}
+    </div>
+</div>
+<div class = "flex justify-center items-center">
+    <div class="overflow-x-auto">
+    <table class ="table">
+        <br>
+        <thead>
+            <tr>
+               <th>Game id</th>
+               <th>Game active</th>
+               <th>Score</th>
+               <th>Open game</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for SingleplayerGame in games%}
+            <tr>
+            
+                <td><p>{{ SingleplayerGame.game_id }}</p></td>
+                <td>{{ SingleplayerGame.Active }}</td>
+                <td>{{SingleplayerGame.Score}}</td>
+                {% if SingleplayerGame.Active %}
+                <td> <button class="btn" onclick="location.href= '/game/singleplayer/{{SingleplayerGame.game_id}}'"> Open </button></td>
+                {% endif %}
+            {% empty %}
+                <td> <a>No games yet</a> </td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,72 @@
+<!-- templates/registration/signup.html -->
+{% extends "base.html" %}
+{% load tailwind_filters %}
+{% load static %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="grid justify-center items-center">
+  <br>
+  <h2 class="grid-rows-1 text-neutral-800 text-3dxl justify-center items-center font-bold mb-5">You are already
+    logged-in, please return to the home-page</h2>
+  <div class="flex grid-rows-2 justify-center">
+    <button class="btn" onclick="location.href= '/'">Return</button>
+  </div>
+</div>
+{% else %}
+<div class="hero min-h-screen" style="background-image: url({% static 'images/herobanner.png' %})">
+  <div class="hero-overlay bg-opacity-60"></div>
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <div class="card bg-gray-light w-96 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title text-neutral-800 text-3dxl justify-center items-center font-bold mb-5">Sign Up</h2>
+          <form class="space-y-1 text-gray-dark" method="post">
+            {% csrf_token %}
+            <div style="color:red">
+              {{ form.non_field_errors }}
+            </div>
+            {% for field in form %}
+            <div class="form-control">
+              <div class="flex justify-center items-center">
+                <label class="label">
+                  {% if field.html_name == 'password1'%}
+                  <span class="label-text text-neutral-800 text-lg font-bold" style="text-transform : capitalize">Password</span>
+                  {% else %}
+                  {% if field.html_name == 'password2'%}
+                  <span class="label-text text-neutral-800 text-lg font-bold" style="text-transform : capitalize">Repeat Password</span>
+                  {% else %}
+                  <span class="label-text text-neutral-800 text-lg font-bold" style="text-transform : capitalize">{{field.html_name }}</span>
+                  {% endif %}
+                  {% endif %}
+                  
+                </label>
+              </div>
+              {% if field.html_name == 'password1' or field.html_name == 'password2'%}
+              <input type="password" placeholder="" id="{{ field.id_for_label }}" class="input input-bordered"
+                name="{{ field.html_name }}" required />
+              {% else %}
+              <input type="text" placeholder="" id="{{ field.id_for_label }}" class="input input-bordered"
+                name="{{ field.html_name }}" required />
+              {% endif %}
+            {{ field.help_text }}
+            <div style="color:red">
+              {{ field.errors }}
+            </div>
+            </div>
+            {% endfor %}
+            <br>
+            <div class="card-actions flex gap-2 columns-2 justify-center">
+              <button class="btn" type="submit">Sign Up</button>
+              <span></span>
+              <button class="btn" onclick="location.href= '/'">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

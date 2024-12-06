@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load tailwind_filters %}
+{% load static %}
+{% block title %}Game{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center">
+    <div class="flex-row">
+        <div class="flex justify-center items-center">
+            <p> Congrats, you are now in a game with id {{game}}</p>
+        </div>
+        {% autoescape off %}
+            {{ plot_div }}
+        {% endautoescape %}
+    </div>
+</div>
+{% endblock %}

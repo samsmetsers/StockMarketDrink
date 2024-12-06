@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load tailwind_filters %}
+{% load static %}
+
+{% block title %}Create game{% endblock %}
+{% block content %}
+<div class="flex justify-center items-center">
+    <div class="flex-row">
+    <a class="text-base"> Please select a difficulty for your game</a>
+    <form action="" class="space-y-1 text-gray-dark" method="post">
+        {% csrf_token %}
+        <div style="color:red">
+            {{ form.non_field_errors }}
+          </div>
+          {% for field in form %}
+            
+              {{ field.errors }}
+              
+              <div class="form-control">
+                <div class ="flex justify-center items-center">
+                {% if field.html_name == "difficulty" %}
+
+                <label class="label">
+                  <span class="label-text text-neutral-800 text-lg font-bold" style="text-transform : capitalize">{{ field.html_name }}</span>
+                </label>
+                </div>
+                {{field}}
+                {%endif%}         
+            </div>
+            
+          {% endfor %}
+        <br>
+        <div class ="card-actions flex gap-2 columns-2 justify-center">
+          <button class="btn" type="submit">Create</button>
+          <button class="btn" onclick="location.href= '/'">Cancel</button>
+        </div>
+    </form>
+</div>
+</div>
+
+{% endblock %}
