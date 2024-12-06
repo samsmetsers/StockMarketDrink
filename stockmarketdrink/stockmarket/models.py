@@ -15,4 +15,4 @@ class StockMarketDrinkInstance(models.Model):
     salmari_verkocht = models.IntegerField(name="Salmari", default=0)
     rocketshot_verkocht = models.IntegerField(name="RocketShot", default=0)
     beurscrash = models.BooleanField(name="BeursCrash", default=False)
-    game_data = models.JSONField(name="Data", default=pricer.Pricer().to_json())
+    game_data = models.JSONField(name="Data", default=pricer.Pricer().to_json(), blank=True)

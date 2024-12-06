@@ -1,5 +1,6 @@
 from django.forms import ModelForm
 from .models import StockMarketDrinkInstance
+
 class StockMarketForm(ModelForm):
     class Meta:
         model = StockMarketDrinkInstance

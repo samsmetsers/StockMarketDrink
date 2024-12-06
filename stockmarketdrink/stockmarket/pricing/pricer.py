@@ -28,35 +28,43 @@ class Pricer():
             drink.time_array.append(0)
         
 
-    def update_price(self, name: str, quantity: int):
-        current_drink = self.drinks[name]
-        
-        self.revenue = current_drink.price * quantity
-        # verkocht
-        delta = 0.01*quantity + 1
-        # fractie over
-        delta += quantity/current_drink.quantity 
-
-        temporary_new_price = delta*current_drink.price
-
-        # update quantity of bought product
-        current_drink.quantity -= quantity
-
-        potential_profit = current_drink.quantity*current_drink.price
-        expected_profit = current_drink.quantity*temporary_new_price
-
-        difference = expected_profit - potential_profit
-
+    def update_prices(self, names: list, quantities: list):
         self.current_time = datetime.datetime.now().timestamp()
+        difference = 0
+
+        for i in range(len(names)):
+            name = names[i]
+            quantity = quantities[i]
+            current_drink = self.drinks[name]
+            
+            self.revenue = current_drink.price * quantity
+            # verkocht
+            delta = 0.01*quantity + 1
+            # fractie over
+            delta += quantity/current_drink.quantity 
+
+            temporary_new_price = delta*current_drink.price
+
+            # update quantity of bought product
+            current_drink.quantity -= quantity
+
+            potential_profit = current_drink.quantity*current_drink.price
+            expected_profit = current_drink.quantity*temporary_new_price
+
+            difference += expected_profit - potential_profit
+
+            current_drink.price = temporary_new_price
+            current_drink.price_array.append(current_drink.price)
+            current_drink.time_array.append((self.current_time - self.start_time) /5)
 
         total_fraction = 0
         for curname, drink in self.drinks.items():
-            if name != curname:
+            if curname not in names:
                 drink.compute_quantity_fraction()
                 total_fraction += drink.fraction
 
-        for name, drink in self.drinks.items():
-            if name != curname:
+        for curname, drink in self.drinks.items():
+            if curname not in names:
                 individual_fraction = drink.fraction / total_fraction
                 amount_down = individual_fraction*difference
 
@@ -67,9 +75,7 @@ class Pricer():
                 drink.price_array.append(drink.price)
                 drink.time_array.append((self.current_time - self.start_time) /5)
 
-        current_drink.price = temporary_new_price
-        current_drink.price_array.append(current_drink.price)
-        current_drink.time_array.append((self.current_time - self.start_time) /5)
+        
     
     def to_json(self):
         total_dict = {}
