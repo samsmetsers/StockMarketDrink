@@ -7,12 +7,102 @@
 <div class="flex justify-center items-center">
     <div class="flex-row">
         <div class="flex justify-center items-center">
-            <p> We zijn begonnen!</p>
+            <h1 class="text-pretty">De N8 Plustrum Beursborrel is begonnen!</h1>
         </div>
  
     </div>
 </div>
-{% autoescape off %}
-    {{ plot_div }}
-{% endautoescape %}
+<div id = "chart"></div>
+<div hx-get="chart/" hx-trigger="every 5s" hx-target="#chart"></div>
+<script>
+ 
+    const gd = document.getElementById('chart');
+    var bier_trace = {
+        x: {{time|safe}},
+        y: {{bier}},
+        type: 'scatter',
+        name: 'Pils',
+        mode: 'lines, markers, text'
+    };
+
+    var witte_wijn_trace = {
+        x: {{time|safe}},
+        y: {{witte_wijn}},
+        type: 'scatter',
+        name: 'Witte Wijn',
+        mode: 'lines, markers, text'
+    };
+
+    var rode_wijn_trace = {
+        x: {{time|safe}},
+        y: {{rode_wijn}},
+        type: 'scatter',
+        name: 'Rode Wijn',
+        mode: 'lines, markers, text'
+    };
+
+    var jenever_trace = {
+        x: {{time|safe}},
+        y: {{jenever}},
+        type: 'scatter',
+        name: 'Jenever',
+        mode: 'lines, markers, text'
+    };
+
+    var salmari_trace = {
+        x: {{time|safe}},
+        y: {{salmari}},
+        type: 'scatter',
+        name: 'Salmari',
+        mode: 'lines, markers, text'
+    };
+
+    var rocketshot_trace = {
+        x: {{time|safe}},
+        y: {{rocketshot}},
+        type: 'scatter',
+        name: 'RocketShot',
+        mode: 'lines, markers, text'
+    };
+
+    var fris_trace = {
+        x: {{time|safe}},
+        y: {{fris}},
+        type: 'scatter',
+        name: 'Fris',
+        mode: 'lines, markers, text'
+    };
+    const data = [bier_trace, witte_wijn_trace, rode_wijn_trace, jenever_trace, salmari_trace, rocketshot_trace, fris_trace]
+    
+    var last_time = {{time|safe}}[{{time|safe}}.length-1];
+
+    Plotly.newPlot(gd, data);
+
+    const update = { 'xaxis.range': {{min_layout}},
+                    'yaxis.range': {{max_layout}},
+                    'plot_bgcolor': 'rgba(0,0,0,0)',
+                    'paper_bgcolor':'rgba(0,0,0,0)',
+                    'yaxis.title': "Prijs",
+                    'xaxis.title': "Tijd"
+                    };
+
+    Plotly.relayout(gd, update)
+
+    document.addEventListener('htmx:afterRequest', function(evt) {
+            const gd = document.getElementById('chart');
+            var price_array = JSON.parse(evt.detail.xhr.getResponseHeader("price_array"))
+            var min_lay = JSON.parse(evt.detail.xhr.getResponseHeader("min_lay"))
+            var max_lay = JSON.parse(evt.detail.xhr.getResponseHeader("max_lay"))
+            const update = {
+                'xaxis.range': min_lay,
+                'yaxis.range': max_lay
+            }
+            Plotly.relayout(gd, update)
+            last_time += 5;
+            time_array = [[last_time], [last_time], [last_time], [last_time], [last_time], [last_time], [last_time]]
+            Plotly.extendTraces(gd, {x: time_array, y: price_array}, [0, 1, 2, 3, 4, 5, 6])
+        
+    });
+
+</script>
 {% endblock %}

@@ -17,12 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView
-from stockmarket.views import StockMarketGameView, UpdatePricesView
+from stockmarket.views import StockMarketGameView, UpdatePricesView, CalculatePriceView, ChartView
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="home.html"), name="home"),
     path('admin/', admin.site.urls),
     path('drink/', StockMarketGameView),
+    path('drink/chart/', ChartView),
     path('input/', UpdatePricesView),
+    path('input/calculateprice/', CalculatePriceView),
     path("__reload__/", include("django_browser_reload.urls"))
 ]

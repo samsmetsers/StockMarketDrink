@@ -16,7 +16,7 @@ class Pricer():
         "Fris":  Drink(name="Fris", start_quantity=144, cost_price=0.50, start_price=0.50)}
 
         self.total_cost = 0
-        self.duration = 2784
+        self.duration = 3*60*60
         self.start_time = datetime.datetime.now().timestamp()
         self.current_time = self.start_time
 
@@ -31,6 +31,7 @@ class Pricer():
     def update_prices(self, names: list, quantities: list):
         self.current_time = datetime.datetime.now().timestamp()
         difference = 0
+        
 
         for i in range(len(names)):
             name = names[i]
@@ -52,10 +53,10 @@ class Pricer():
             expected_profit = current_drink.quantity*temporary_new_price
 
             difference += expected_profit - potential_profit
-
+            
             current_drink.price = temporary_new_price
             current_drink.price_array.append(current_drink.price)
-            current_drink.time_array.append((self.current_time - self.start_time) /5)
+            current_drink.time_array.append((self.current_time - self.start_time))
 
         total_fraction = 0
         for curname, drink in self.drinks.items():
@@ -73,7 +74,7 @@ class Pricer():
 
                 drink.price = exp_profit/drink.quantity
                 drink.price_array.append(drink.price)
-                drink.time_array.append((self.current_time - self.start_time) /5)
+                drink.time_array.append((self.current_time - self.start_time))
 
         
     

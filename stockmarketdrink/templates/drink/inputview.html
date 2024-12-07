@@ -31,8 +31,22 @@
           {% endfor %}
         <br>
         <div class ="card-actions flex gap-2 columns-2 justify-center">
-          <button class="btn" type="submit">Update prijs</button>
-          <button class="btn" onclick="location.href= '/'">Cancel</button>
+          <!--  -->
+          <button class="btn" onclick="prijsberekening.showModal()" hx-post="calculateprice/" hx-target="#pricetarget">Bereken Prijs</button>
+          <dialog id="prijsberekening" class="modal modal-bottom sm:modal-middle">
+            <div class="modal-box">
+              <h3 class="text-lg font-bold">Totale prijs:</h3>
+              <div id="pricetarget"></div>
+              <div class="modal-action">
+                <form method="dialog">
+                  <!-- if there is a button in form, it will close the modal -->
+                  <button class="btn" type="submit">Update Prijs!</button>
+                  <button class="btn" type="button" onclick="location.href= '/input'">Cancel</button>
+                </form>
+              </div>
+            </div>
+          </dialog>
+          <button class="btn" type="button" onclick="location.href= '/input'">Reset</button>
         </div>
     </form>
 </div>
