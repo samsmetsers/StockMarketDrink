@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load tailwind_filters %}
+{% load static %}
+{% block title %}Beursborrel{% endblock %}
+{% block content %}
+{% if not in_progress %}
+<div class="flex justify-center items-center">
+    <div class="flex-row">
+      <div class="flex justify-center">
+        <div
+        class="hero min-h-screen"
+        >
+        <!-- style="background-image: url({% static 'images/herobanner.png' %})" -->
+        <div class="hero-overlay bg-opacity-60">
+            <div class="hero-content text-neutral-content text-center">
+                <div class="max-w-md">
+                    <h1 class="mb-5 text-5xl font-bold">Er is al een spel bezig</h1>
+                    <p class="mb-5">
+                        Hervat het spel of verwijder deze om opnieuw te beginnen
+                    </p>
+                    <button class="btn" onclick="location.href= '/drink'">Hervat</button>
+                    <button class="btn" onclick="location.href='/start/remove/'">Verwijder</button>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+</div>
+{% else %}
+<div class="flex justify-center items-center">
+    <div class="flex-row">
+      <div class="flex justify-center">
+<div
+  class="hero min-h-screen">
+  <div class="hero-overlay bg-opacity-60">
+  <div class="hero-content text-neutral-content text-center">
+    <div class="max-w-md">
+      <h1 class="mb-5 text-5xl font-bold">IS HET AL 8 OVER 8????</h1>
+      <p class="mb-5">
+         Welkom bij de N8 Beursborrel!
+      </p>
+      <button class="btn" onclick="location.href= '/drink'">Start</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+{% endif %}
+
+{% endblock %}

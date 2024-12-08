@@ -6,10 +6,42 @@
 {% block content %}
 <div class="flex justify-center items-center">
     <div class="flex-row">
-        <div class="flex justify-center items-center">
-            <h1 class="text-pretty">De N8 Plustrum Beursborrel is begonnen!</h1>
-        </div>
- 
+        <div class="stats shadow">
+            <div class="stat place-items-center">
+              <div class="stat-title text-gray-dark" style="font-weight:bold">Bier</div>
+              <div id ="bier_prijs" class="stat-value">€{{prices.0}}</div>
+            </div>
+          
+            <div class="stat place-items-center">
+              <div class="stat-title text-gray-dark" style="font-weight:bold">Witte Wijn</div>
+              <div id ="witte_wijn_prijs" class="stat-value">€{{prices.1}}</div>
+            </div>
+          
+            <div class="stat place-items-center">
+              <div class="stat-title text-gray-dark" style="font-weight:bold">Rode Wijn</div>
+              <div id ="rode_wijn_prijs" class="stat-value">€{{prices.2}}</div>
+            </div>
+
+            <div class="stat place-items-center">
+                <div class="stat-title text-gray-dark" style="font-weight:bold">Jenever</div>
+                <div id ="jenever_prijs" class="stat-value">€{{prices.3}}</div>
+              </div>
+
+              <div class="stat place-items-center">
+                <div class="stat-title text-gray-dark" style="font-weight:bold">Salmari</div>
+                <div id ="salmari_prijs" class="stat-value">€{{prices.4}}</div>
+              </div>
+
+              <div class="stat place-items-center">
+                <div class="stat-title text-gray-dark" style="font-weight:bold">RocketShot</div>
+                <div id ="rocketshot_prijs" class="stat-value">€{{prices.5}}</div>
+              </div>
+
+              <div class="stat place-items-center">
+                <div class="stat-title text-gray-dark" style="font-weight:bold">Fris</div>
+                <div id="fris_prijs" class="stat-value">€{{prices.6}}</div>
+              </div>
+          </div>
     </div>
 </div>
 <div id = "chart"></div>
@@ -22,7 +54,7 @@
         y: {{bier}},
         type: 'scatter',
         name: 'Pils',
-        mode: 'lines, markers, text'
+        mode: 'lines, markers'
     };
 
     var witte_wijn_trace = {
@@ -30,7 +62,7 @@
         y: {{witte_wijn}},
         type: 'scatter',
         name: 'Witte Wijn',
-        mode: 'lines, markers, text'
+        mode: 'lines, markers'
     };
 
     var rode_wijn_trace = {
@@ -38,7 +70,7 @@
         y: {{rode_wijn}},
         type: 'scatter',
         name: 'Rode Wijn',
-        mode: 'lines, markers, text'
+        mode: 'lines, markers'
     };
 
     var jenever_trace = {
@@ -46,7 +78,7 @@
         y: {{jenever}},
         type: 'scatter',
         name: 'Jenever',
-        mode: 'lines, markers, text'
+        mode: 'lines, markers'
     };
 
     var salmari_trace = {
@@ -54,7 +86,7 @@
         y: {{salmari}},
         type: 'scatter',
         name: 'Salmari',
-        mode: 'lines, markers, text'
+        mode: 'lines, markers'
     };
 
     var rocketshot_trace = {
@@ -62,7 +94,7 @@
         y: {{rocketshot}},
         type: 'scatter',
         name: 'RocketShot',
-        mode: 'lines, markers, text'
+        mode: 'lines, markers'
     };
 
     var fris_trace = {
@@ -70,12 +102,10 @@
         y: {{fris}},
         type: 'scatter',
         name: 'Fris',
-        mode: 'lines, markers, text'
+        mode: 'lines, markers'
     };
     const data = [bier_trace, witte_wijn_trace, rode_wijn_trace, jenever_trace, salmari_trace, rocketshot_trace, fris_trace]
     
-    var last_time = {{time|safe}}[{{time|safe}}.length-1];
-
     Plotly.newPlot(gd, data);
 
     const update = { 'xaxis.range': {{min_layout}},
@@ -93,15 +123,65 @@
             var price_array = JSON.parse(evt.detail.xhr.getResponseHeader("price_array"))
             var min_lay = JSON.parse(evt.detail.xhr.getResponseHeader("min_lay"))
             var max_lay = JSON.parse(evt.detail.xhr.getResponseHeader("max_lay"))
+            var crash = JSON.parse(evt.detail.xhr.getResponseHeader("crash"))
+
+            var price_updates = JSON.parse(evt.detail.xhr.getResponseHeader("prices"))
+
+            var old_price = parseFloat(document.getElementById("bier_prijs").textContent.split("\€")[1])
+            if (price_updates[0] != old_price){
+                var prijs = document.getElementById("bier_prijs")
+                prijs.textContent = "\€"+price_updates[0]
+            }
+
+            old_price = parseFloat(document.getElementById("witte_wijn_prijs").textContent.split("\€")[1])
+            if (price_updates[1] != old_price){
+                var prijs = document.getElementById("witte_wijn_prijs")
+                prijs.textContent = "\€"+price_updates[1]
+            } 
+
+            old_price = parseFloat(document.getElementById("rode_wijn_prijs").textContent.split("\€")[1])
+            if (price_updates[2] != old_price){
+                var prijs = document.getElementById("rode_wijn_prijs")
+                prijs.textContent = "\€"+price_updates[2]
+            } 
+
+            old_price = parseFloat(document.getElementById("jenever_prijs").textContent.split("\€")[1])
+            if (price_updates[3] != old_price){
+                var prijs = document.getElementById("jenever_prijs")
+                prijs.textContent = "\€"+price_updates[3]
+            } 
+
+            old_price = parseFloat(document.getElementById("salmari_prijs").textContent.split("\€")[1])
+            if (price_updates[4] != old_price){
+                var prijs = document.getElementById("salmari_prijs")
+                prijs.textContent = "\€"+price_updates[4]
+            } 
+
+            old_price =parseFloat(document.getElementById("rocketshot_prijs").textContent.split("\€")[1])
+            if (price_updates[5] != old_price){
+                var prijs = document.getElementById("rocketshot_prijs")
+                prijs.textContent = "\€"+price_updates[5]
+            } 
+
+            old_price = parseFloat(document.getElementById("fris_prijs").textContent.split("\€")[1])
+            if (price_updates[6] != old_price){
+                var prijs = document.getElementById("fris_prijs")
+                prijs.textContent = "\€"+price_updates[6]
+            }  
+            
+
+            if (crash){
+                window.alert("BEURSCRASH!")
+            } else {
             const update = {
                 'xaxis.range': min_lay,
                 'yaxis.range': max_lay
             }
             Plotly.relayout(gd, update)
-            last_time += 5;
+            var last_time = JSON.parse(evt.detail.xhr.getResponseHeader("new_time"));
             time_array = [[last_time], [last_time], [last_time], [last_time], [last_time], [last_time], [last_time]]
             Plotly.extendTraces(gd, {x: time_array, y: price_array}, [0, 1, 2, 3, 4, 5, 6])
-        
+            }
     });
 
 </script>

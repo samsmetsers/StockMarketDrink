@@ -8,9 +8,29 @@ from .models import StockMarketDrinkInstance
 from .forms import StockMarketForm
 from .pricing import pricer
 import plotly.graph_objects as go
-import django.utils.timezone as tz
+import datetime
 from django.http import HttpResponse
 import json
+
+def RemoveGame(request):
+    game = StockMarketDrinkInstance.objects.get()
+    game.delete()
+
+    return redirect('/start/')
+
+def StartView(request):
+    game_in_progress = True
+    if len(StockMarketDrinkInstance.objects.all()) > 0:
+        game = StockMarketDrinkInstance.objects.get()
+
+        price_holder = pricer.Pricer()
+        price_holder.from_json(game.Data)
+
+        if datetime.datetime.now().timestamp() - price_holder.start_time > 3600:
+            game_in_progress = False
+    
+    print(game_in_progress)
+    return render(request, 'drink/startview.html', {'in_progress': game_in_progress})
 
 def CalculatePriceView(request):
     if request.method == 'POST':
@@ -72,7 +92,6 @@ def UpdatePricesView(request):
     succes = False
 
     if request.method == 'POST':
-        print("Nu posting")
         form = StockMarketForm(request.POST)
 
         if form.is_valid():
@@ -80,6 +99,14 @@ def UpdatePricesView(request):
 
             drink_names = []
             quantities_sold = []
+
+            if form["BeursCrash"].value():
+                game.BeursCrash = True
+                game.save()
+                succes = True
+                new_form = StockMarketForm()
+                return render(request, "drink/inputview.html", {'form': new_form, 'succes': succes})
+            
 
             if int(form.data["Bier"]) > 0:
                 game.Bier += int(form.data["Bier"])
@@ -136,7 +163,12 @@ def UpdatePricesView(request):
     return render(request, "drink/inputview.html", {'form': form, 'succes': succes})
 
 def StockMarketGameView(request):
-    game = StockMarketDrinkInstance.objects.get()
+    if not len(StockMarketDrinkInstance.objects.all()) > 0:
+        game = StockMarketDrinkInstance()
+        game.save()
+    else:
+        game = StockMarketDrinkInstance.objects.get()
+
     price_holder = pricer.Pricer()
     price_holder.from_json(game.Data)
 
@@ -155,13 +187,18 @@ def StockMarketGameView(request):
    
     fris_price = price_holder.drinks["Fris"].price_array
 
+    prices = [round(bier_price[-1], 2), round(witte_wijn_price[-1],2), round(rode_wijn_price[-1],2), round(jenever_price[-1],2),
+               round(salmari_price[-1], 2), round(rocketshot_price[-1], 2), round(fris_price[-1],2)]
 
-    min_layout =[max(0, (price_holder.current_time-price_holder.start_time)-300), (price_holder.current_time-price_holder.start_time)+300]
-    max_layout = [0.2, np.max(rode_wijn_price).item()+0.1]
+    max_price = np.max(prices)
+    min_price = np.min(prices)
+
+    min_layout =[max(0, (price_holder.current_time-price_holder.start_time)-900), (price_holder.current_time-price_holder.start_time)+900]
+    max_layout = [min_price.item() - 0.05, max_price.item()+0.05]
 
     return render(request, 'drink/drinkview.html', {'game': game, "price_holder":price_holder, 'time': bier_time, 'bier': bier_price, 'witte_wijn': witte_wijn_price,
                                                     'rode_wijn': rode_wijn_price, 'jenever': jenever_price, 'salmari': salmari_price,
-                                                    'rocketshot': rocketshot_price, 'fris': fris_price, 'min_layout':min_layout, 'max_layout':max_layout})
+                                                    'rocketshot': rocketshot_price, 'fris': fris_price, 'min_layout':min_layout, 'max_layout':max_layout, 'prices':prices})
 
 def ChartView(request):
     game = StockMarketDrinkInstance.objects.get()
@@ -169,6 +206,12 @@ def ChartView(request):
     price_holder = pricer.Pricer()
     price_holder.from_json(game.Data)
     
+    crash = False
+
+    if game.BeursCrash:
+        crash=True
+        game.BeursCrash=False
+
     bier_price = price_holder.drinks["Bier"].price
     new_time = price_holder.drinks["Bier"].time_array[-1] + 5
     witte_wijn_price = price_holder.drinks["Witte Wijn"].price
@@ -192,14 +235,18 @@ def ChartView(request):
     price_holder.drinks["RocketShot"].price_array.append(rocketshot_price)
     price_holder.drinks["Fris"].price_array.append(fris_price)
 
-    price_holder.current_time += 5
+    price_holder.current_time = datetime.datetime.now().timestamp()
 
     price_array = [[bier_price], [witte_wijn_price], [rode_wijn_price], [jenever_price], [salmari_price], [rocketshot_price], [fris_price]]
+    
+    prices = [round(bier_price, 2), round(witte_wijn_price, 2), round(rode_wijn_price, 2), round(jenever_price,2), round(salmari_price,2), round(rocketshot_price, 2), round(fris_price,2)]
+    max_price = np.max(prices)
+    min_price = np.min(prices)
 
-    min_layout =[max(0, (price_holder.current_time-price_holder.start_time)-300), (price_holder.current_time-price_holder.start_time)+300]
-    max_layout = [0.2, np.max(rode_wijn_price_array).item()+0.1]
+    min_layout =[max(0, (price_holder.current_time-price_holder.start_time)-900), (price_holder.current_time-price_holder.start_time)+900]
+    max_layout = [min_price.item() - 0.05, max_price.item()+0.1]
 
     game.Data = price_holder.to_json()
     game.save()
-    response = HttpResponse(status=204, headers={'price_array': json.dumps(price_array), 'min_lay':json.dumps(min_layout), 'max_lay':json.dumps(max_layout)})
+    response = HttpResponse(status=204, headers={'price_array': json.dumps(price_array), 'min_lay':json.dumps(min_layout), 'max_lay':json.dumps(max_layout), 'new_time':json.dumps(price_holder.current_time- price_holder.start_time), 'crash':json.dumps(crash), 'prices':json.dumps(prices)})
     return response
