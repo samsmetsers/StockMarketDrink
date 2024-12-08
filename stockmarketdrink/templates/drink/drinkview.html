@@ -131,42 +131,77 @@
             if (price_updates[0] != old_price){
                 var prijs = document.getElementById("bier_prijs")
                 prijs.textContent = "\€"+price_updates[0]
+                if(price_updates[0] < old_price){
+                    prijs.style.color = "green"
+                } else {
+                    prijs.style.color = "red"
+                }
             }
 
             old_price = parseFloat(document.getElementById("witte_wijn_prijs").textContent.split("\€")[1])
             if (price_updates[1] != old_price){
                 var prijs = document.getElementById("witte_wijn_prijs")
                 prijs.textContent = "\€"+price_updates[1]
+                if(price_updates[1] < old_price){
+                    prijs.style.color = "green"
+                } else {
+                    prijs.style.color = "red"
+                }
             } 
 
             old_price = parseFloat(document.getElementById("rode_wijn_prijs").textContent.split("\€")[1])
             if (price_updates[2] != old_price){
                 var prijs = document.getElementById("rode_wijn_prijs")
                 prijs.textContent = "\€"+price_updates[2]
+                if(price_updates[2] < old_price){
+                    prijs.style.color = "green"
+                } else {
+                    prijs.style.color = "red"
+                }
             } 
 
             old_price = parseFloat(document.getElementById("jenever_prijs").textContent.split("\€")[1])
             if (price_updates[3] != old_price){
                 var prijs = document.getElementById("jenever_prijs")
                 prijs.textContent = "\€"+price_updates[3]
+                if(price_updates[3] < old_price){
+                    prijs.style.color = "green"
+                } else {
+                    prijs.style.color = "red"
+                }
             } 
 
             old_price = parseFloat(document.getElementById("salmari_prijs").textContent.split("\€")[1])
             if (price_updates[4] != old_price){
                 var prijs = document.getElementById("salmari_prijs")
                 prijs.textContent = "\€"+price_updates[4]
+                if(price_updates[4] < old_price){
+                    prijs.style.color = "green"
+                } else {
+                    prijs.style.color = "red"
+                }
             } 
 
             old_price =parseFloat(document.getElementById("rocketshot_prijs").textContent.split("\€")[1])
             if (price_updates[5] != old_price){
                 var prijs = document.getElementById("rocketshot_prijs")
                 prijs.textContent = "\€"+price_updates[5]
+                if(price_updates[5] < old_price){
+                    prijs.style.color = "green"
+                } else {
+                    prijs.style.color = "red"
+                }
             } 
 
             old_price = parseFloat(document.getElementById("fris_prijs").textContent.split("\€")[1])
             if (price_updates[6] != old_price){
                 var prijs = document.getElementById("fris_prijs")
                 prijs.textContent = "\€"+price_updates[6]
+                if(price_updates[6] < old_price){
+                    prijs.style.color = "green"
+                } else {
+                    prijs.style.color = "red"
+                }
             }  
             
 
