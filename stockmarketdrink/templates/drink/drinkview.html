@@ -4,6 +4,9 @@
 {% block title %}Beursborrel{% endblock %}
 
 {% block content %}
+<div class="hero min-h-screen"
+  style="background-image: url({% static 'images/n8_strepen.png' %})">
+  <div class="hero-overlay bg-opacity-20">
 <div class="flex justify-center items-center">
     <div class="flex-row">
         <div class="stats shadow">
@@ -46,6 +49,8 @@
 </div>
 <div id = "chart"></div>
 <div hx-get="chart/" hx-trigger="every 5s" hx-target="#chart"></div>
+</div>
+</div>
 <script>
  
     const gd = document.getElementById('chart');
@@ -110,8 +115,8 @@
 
     const update = { 'xaxis.range': {{min_layout}},
                     'yaxis.range': {{max_layout}},
-                    'plot_bgcolor': 'rgba(0,0,0,0)',
-                    'paper_bgcolor':'rgba(0,0,0,0)',
+                     //'plot_bgcolor': 'rgba(0,0,0,0)',
+                     'paper_bgcolor':'rgba(0,0,0,0)',
                     'yaxis.title': "Prijs",
                     'xaxis.title': "Tijd"
                     };
